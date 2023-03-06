@@ -1,6 +1,10 @@
 import Head from "next/head";
+import { getFeaturedEvents } from "./../dummy-data";
+import EventList from "@/components/events/EventList.component";
 
 export default function Home() {
+  const featuredEvents = getFeaturedEvents();
+
   return (
     <>
       <Head>
@@ -9,7 +13,9 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main>Main content</main>
+      <main>
+        <EventList events={featuredEvents}></EventList>
+      </main>
     </>
   );
 }
