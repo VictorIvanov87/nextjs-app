@@ -1,8 +1,11 @@
 import React from "react";
-import Link from "next/link";
 import Image from "next/image";
 
 import classes from "./EventItem.module.css";
+import Button from "../UI/Button.component";
+import DateIcon from "../icons/DateIcon";
+import AddressIcon from "./../icons/AddressIcon";
+import ArrowRightIcon from "./../icons/ArrowRightIOcon";
 
 interface EventItemProps {
   event: any;
@@ -14,29 +17,36 @@ const EventItem = ({ event }: EventItemProps) => {
     month: "long",
     year: "numeric",
   });
-  const formattedAddress = event.location.replace(",", "\n");
+  const formattedAddress = event.location.replace(", ", "\n");
   const exploreLink = `/events/${event.id}`;
 
   return (
-    <li>
+    <li className={classes.item}>
       <Image
         src={`/${event.image}`}
         alt={event.title}
         width={100}
         height={100}
       />
-      <div>
-        <div>
+      <div className={classes.content}>
+        <div className={classes.summary}>
           <h2>{event.title}</h2>
-          <div>
+          <div className={classes.date}>
+            <DateIcon />
             <time>{humanReadbleDate}</time>
           </div>
-          <div>
+          <div className={classes.address}>
+            <AddressIcon />
             <address>{formattedAddress}</address>
           </div>
         </div>
-        <div>
-          <Link href={exploreLink}>Explore Event</Link>
+        <div className={classes.actions}>
+          <Button link={exploreLink}>
+            Explore Event
+            <span className={classes.icon}>
+              <ArrowRightIcon />
+            </span>
+          </Button>
         </div>
       </div>
     </li>
