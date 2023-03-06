@@ -25,8 +25,8 @@ const EventItem = ({ event }: EventItemProps) => {
       <Image
         src={`/${event.image}`}
         alt={event.title}
-        width={100}
-        height={100}
+        width={500}
+        height={500}
       />
       <div className={classes.content}>
         <div className={classes.summary}>
