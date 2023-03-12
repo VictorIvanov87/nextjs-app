@@ -2,10 +2,7 @@ import React from "react";
 import EventSummary from "@/components/event-detail/EventSummary.component";
 import EventContent from "@/components/event-detail/EventContent.component";
 import EventLogistics from "@/components/event-detail/EventLogistics.component";
-import {
-  getAllEvents,
-  getEventById,
-} from "./../../helpers/api-util";
+import { getAllEvents, getEventById } from "./../../helpers/api-util";
 
 const EventDetailsPage = ({ event }: any) => {
   if (!event) {
@@ -36,6 +33,7 @@ export const getStaticProps = async (context: any) => {
     props: {
       event,
     },
+    revalidate: 30,
   };
 };
 

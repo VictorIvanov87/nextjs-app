@@ -1,14 +1,24 @@
-import { getAllEvents } from "@/dummy-data";
 import React from "react";
 import EventList from "@/components/events/EventList.component";
+import { getAllEvents } from "@/helpers/api-util";
 
-const EventsPage = () => {
-  const allEvents = getAllEvents();
+const EventsPage = ({events}: any) => {
   return (
     <div>
-      <EventList events={allEvents}></EventList>
+      <EventList events={events}></EventList>
     </div>
   );
+};
+
+export const getStaticProps = async () => {
+  const allEvents = await getAllEvents();
+
+  return {
+    props: {
+      events: allEvents,
+    },
+    revalidate: 1800,
+  };
 };
 
 export default EventsPage;

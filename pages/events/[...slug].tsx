@@ -1,12 +1,11 @@
 import React from "react";
-import { getFilteredEvents } from "./../../dummy-data";
 import { useRouter } from "next/router";
 import EventList from "@/components/events/EventList.component";
 import Button from "@/components/UI/Button.component";
+import { getFilteredEvents } from "@/helpers/api-util";
 
-const FilteredEventsPage = () => {
+const FilteredEventsPage = ({ hasError, events }: any) => {
   const router = useRouter();
-  const filterData = router.query.slug;
 
   const noData = () => {
     return (
@@ -19,22 +18,26 @@ const FilteredEventsPage = () => {
     );
   };
 
-  if (filterData) {
-    const year = filterData[0];
-
-    const month = filterData[1];
-    const events = getFilteredEvents({
-      year: Number(year),
-      month: Number(month),
-    });
-
-    if (events && events.length > 0) {
-      return <EventList events={events}></EventList>;
-    } else {
-      return noData();
-    }
-  } else {
+  if (hasError) {
     return noData();
+  } else {
+    return <EventList events={events}></EventList>;
+  }
+};
+
+export const getServerSideProps = async (context: any) => {
+  const filterData = context.params.slug;
+  const year = filterData[0];
+  const month = filterData[1];
+  const events = await getFilteredEvents({
+    year: Number(year),
+    month: Number(month),
+  });
+
+  if (events && events.length > 0) {
+    return { props: { events } };
+  } else {
+    return { props: { hasError: true } };
   }
 };
 
