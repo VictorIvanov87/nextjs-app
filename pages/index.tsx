@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { getFeaturedEvents } from "../helpers/api-util";
 import EventList from "@/components/events/EventList.component";
 import EventsSearch from "@/components/events/EventsSearch.component";
+import NewsletterRegistration from "./../components/input/newsletter-registration";
 
 const Home = ({ events }: any) => {
   const router = useRouter();
@@ -22,6 +23,7 @@ const Home = ({ events }: any) => {
       <main>
         <EventsSearch onSearch={handleEventsSearch} />
         <EventList events={events}></EventList>
+        <NewsletterRegistration />
       </main>
     </>
   );
