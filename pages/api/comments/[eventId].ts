@@ -1,15 +1,23 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { MongoClient } from "mongodb";
+import {
+  connectToDb,
+  getAllDocuments,
+  insertDocument,
+} from "@/helpers/db-util";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const client = await MongoClient.connect(
-    "mongodb+srv://admin:admin@cluster0.hz4euk1.mongodb.net/?retryWrites=true&w=majority"
-  );
   const eventId = req.query.eventId;
+  let client;
+  try {
+    client = await connectToDb();
+  } catch (error) {
+    res.status(500).json({ message: "Server failed" });
+    return;
+  }
 
   if (req.method === "POST") {
     const { email, name, text } = req.body.commentData;
@@ -26,18 +34,23 @@ export default async function handler(
       text,
     };
 
-    const db = client.db();
-    await db.collection("comments").insertOne({ comment });
-    client.close();
+    try {
+      await insertDocument(client, "comments", comment);
+      res.status(201).json({ message: "Comment added" });
+    } catch (error) {
+      res.status(500).json({ message: "Adding of comment failed" });
+    }
 
-    res.status(201).json({ message: "Comment added" });
+    client.close();
   }
 
   if (req.method === "GET") {
-    const db = client.db();
-    const comments = await db.collection("comments").find().sort({_id: -1}).toArray();
+    try {
+      const comments = await getAllDocuments(client, "comments");
+      res.status(200).json({ comments });
+    } catch (error) {
+      res.status(500).json({ message: "Getting comments failed" });
+    }
     client.close();
-
-    res.status(200).json({ comments});
   }
 }
